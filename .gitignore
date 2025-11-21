@@ -1,0 +1,15 @@
+# .gitignore
+
+# Entorno virtual de Python
+venv/
+
+# Archivos de caché/compilación de Python
+__pycache__/
+*.pyc
+
+# Archivos sensibles (Si usas un .env para la clave)
+.env
+
+# Archivos grandes que no deben versionarse (aunque el Excel es pequeño)
+# Si tu Excel fuera muy grande, lo ignorarías.
+# codigos_departamentos.xlsx
