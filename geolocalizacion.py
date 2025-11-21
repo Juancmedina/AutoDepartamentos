@@ -54,4 +54,5 @@ def obtener_departamento_de_api(lat: float, lon: float) -> str | None:
         return None
     
 if __name__ == "__main__":
+    
     departamento = obtener_departamento_de_api(LATITUD, LONGITUD)
