@@ -23,6 +23,23 @@ def cargar_divipola(ruta: str) -> pd.DataFrame:
 
     return df
 
+def obtener_coordenadas_por_municipios(df_divipola: pd.DataFrame):
+    
+    municipios = []
+
+    for _, fila in df_divipola.iterrows():
+        municipios.append({
+            "codigo_departamento": int(fila["Código Departamento"]),
+            "nombre_departamento": fila["Nombre Departamento"],
+            "codigo_municipio": int(fila["Código Municipio"]),
+            "nombre_municipio": fila["Nombre Municipio"],
+            "latitud": float(fila["Latitud_num"]),
+            "longitud": float(fila["Longitud_num"]),
+        })
+
+    return municipios
+
+
 
 def buscar_en_divipola(df_divipola: pd.DataFrame,
                        depto_google: str,

@@ -4,6 +4,7 @@ import pandas as pd
 
 from utils_divipola import (
     cargar_divipola,
+    obtener_coordenadas_por_municipios,
     buscar_en_divipola,
     RUTA_DIVIPOLA
 )
@@ -67,6 +68,7 @@ if __name__ == "__main__":
     departamento, municipio = obtener_departamento_y_municipio_de_api(LATITUD, LONGITUD)
 
     df_divipola = cargar_divipola(RUTA_DIVIPOLA)
+    #lista_municipios = obtener_coordenadas_por_municipios(df_divipola)
     print("\n Buscando coincidencia en DIVIPOLA..")
     info_divipola = buscar_en_divipola(df_divipola, departamento, municipio)
     print(f"   ✅ Resultado en DIVIPOLA:")
