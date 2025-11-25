@@ -1,7 +1,5 @@
-import json
-import requests
 import pandas as pd
-
+from flujo_nearby import obtener_lugares_por_municipios
 from utils_divipola import (
     cargar_divipola,
     obtener_coordenadas_por_municipios,
@@ -9,67 +7,34 @@ from utils_divipola import (
     RUTA_DIVIPOLA
 )
 
-API_KEY = "AIzaSyBep8722UIKODElaxjOCPXjlUr85zS8rzI" 
-BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json"
 
-LATITUD = 8.882597
-LONGITUD = -75.797453
-
-def obtener_departamento_y_municipio_de_api(lat: float, lon: float) -> tuple[str  | None, str | None]:
-
-    params = {
-        'latlng': f"{lat},{lon}",
-        'key': API_KEY,
-    }
-    
-    print(f"   🌍 Consultando API para Latitud: {lat}, Longitud: {lon}...")
-    
-    try:
-        response = requests.get(BASE_URL, params=params)
-        response.raise_for_status()
-        data = response.json()
-        nombre_departamento = None
-        nombre_municipio = None
-        
-        if data.get('status') == 'OK' and data.get('results'):
-            address_components = data['results'][0].get('address_components', [])
-
-            for component in address_components:
-                types = component.get('types', [])
-                long_name = component.get('long_name')
-
-                if not long_name:
-                    continue
-
-
-                if 'administrative_area_level_1' in types:
-                    nombre_departamento = long_name
-                    print(f"   ✅ Nombre del Departamento obtenido: {nombre_departamento}")
-
-                elif 'administrative_area_level_2' in types:
-                    nombre_municipio = long_name
-                    print(f"   ✅ Nombre del Municipio obtenido: {nombre_municipio}")
-
-                if nombre_departamento and nombre_municipio:
-                    break
-
-            if nombre_departamento and nombre_municipio:
-                    return nombre_departamento, nombre_municipio
-                
-        print("   ❌ Error: La API no pudo encontrar el departamento o el JSON no tiene el formato esperado.")
-        return None, None
-        
-    except requests.exceptions.RequestException as e:
-        print(f"   ❌ Error al conectar con la API: {e}")
-        return None, None
-    
-if __name__ == "__main__":
-    
-    departamento, municipio = obtener_departamento_y_municipio_de_api(LATITUD, LONGITUD)
+def main():
 
     df_divipola = cargar_divipola(RUTA_DIVIPOLA)
-    #lista_municipios = obtener_coordenadas_por_municipios(df_divipola)
-    print("\n Buscando coincidencia en DIVIPOLA..")
-    info_divipola = buscar_en_divipola(df_divipola, departamento, municipio)
-    print(f"   ✅ Resultado en DIVIPOLA:")
-    print(json.dumps(info_divipola, indent=4, ensure_ascii=False))
+    print(f"Se cargaron {len(df_divipola)} registros de DIVIPOLA.")
+    
+    
+    MODO_PRUEBA = True           # pon False para correr todo
+    NUM_MUNICIPIOS_PRUEBA = 2    
+
+    if MODO_PRUEBA:
+        df_entrada = df_divipola.head(NUM_MUNICIPIOS_PRUEBA)
+        nombre_salida = "nearby_por_municipio_PRUEBA.xlsx"
+        print(f"Ejecutando en modo prueba con {len(df_entrada)} municipios...")
+    else:
+        df_entrada = df_divipola
+        nombre_salida = "nearby_por_municipio_FULL.xlsx"
+        print("Ejecutando para TODOS los municipios...")
+
+    resultados = obtener_lugares_por_municipios(df_entrada, max_results=10)
+    print(f"Total de filas generadas: {len(resultados)}")
+
+    df_resultados = pd.DataFrame(resultados)
+    df_resultados.to_excel(nombre_salida, index=False)
+
+    print(f"Archivo generado: {nombre_salida}")
+
+
+if __name__ == "__main__":
+    main()
+
