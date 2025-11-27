@@ -1,5 +1,5 @@
 import requests
-from config import PLACES_API_KEY
+from .config import PLACES_API_KEY
 
 PLACES_URL = "https://places.googleapis.com/v1/places:searchNearby"
 

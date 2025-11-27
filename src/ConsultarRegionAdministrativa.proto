@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcApiService.enrolamientoProductos.Protos";
+
+package ConsultarRegionAdministrativa;
+
+service ConsultarRegionAdministrativaService {
+  rpc GetCodigoRegion (GetCodigoRegionRequest) returns (GetCodigoRegionResponse);
+}
+message GetCodigoRegionRequest {
+  string nombreDepartamento = 1;
+  string nombreMunicipio = 2;
+}
+message GetCodigoRegionResponse {
+  string codigoDepartamento = 1;
+  string codigoMunicipio = 2;
+}

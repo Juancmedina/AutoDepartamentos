@@ -2,8 +2,8 @@ import json
 import requests
 import pandas as pd
 
-from config import API_KEY
-from utils_divipola import (
+from .config import API_KEY
+from .utils_divipola import (
     cargar_divipola,
     buscar_en_divipola,
     RUTA_DIVIPOLA

@@ -1,6 +1,6 @@
 import pandas as pd
-from flujo_nearby import obtener_lugares_por_municipios
-from utils_divipola import (
+from .flujo_nearby import obtener_lugares_por_municipios
+from .utils_divipola import (
     cargar_divipola,
     obtener_coordenadas_por_municipios,
     buscar_en_divipola,
@@ -15,7 +15,7 @@ def main():
     
     
     MODO_PRUEBA = True           # pon False para correr todo
-    NUM_MUNICIPIOS_PRUEBA = 2    
+    NUM_MUNICIPIOS_PRUEBA = 30    
 
     if MODO_PRUEBA:
         df_entrada = df_divipola.head(NUM_MUNICIPIOS_PRUEBA)
