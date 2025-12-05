@@ -1,9 +1,9 @@
 import requests
-from .config import PLACES_API_KEY
+from .config import PLACES_API_KEY 
 
 PLACES_URL = "https://places.googleapis.com/v1/places:searchNearby"
 
-def buscar_lugares_cercanos(lat: float, lon: float, max_results: int = 10):
+def buscar_lugares_cercanos(lat: float, lon: float, max_results: int = 5):
   
     headers = {
         "Content-Type": "application/json",
@@ -30,28 +30,26 @@ def buscar_lugares_cercanos(lat: float, lon: float, max_results: int = 10):
     data = response.json()
     return data.get('places', [])
 
-#PREGUNTAR
-
 def extraer_dep_muni(place):
     
     departamento = None
-    municipio = None
+    municipio_principal = None
+    municipio_localidad = None 
 
     for comp in place.get("addressComponents", []):
         types = comp.get("types", [])
+        long_name = comp.get("longText")
 
-        if "administrative_area_level_1" in types:
-            departamento = comp.get("longText")
+        if not long_name:
+            continue
 
-        if "administrative_area_level_2" in types:
-            municipio = comp.get("longText")
+        if "administrative_area_level_1" in types and departamento is None:
+            departamento = long_name
 
-    return departamento, municipio
+        if "administrative_area_level_2" in types and municipio_principal is None:
+            municipio_principal = long_name
+        
+        if "locality" in types and municipio_localidad is None:
+            municipio_localidad = long_name
 
-
-
-
-
-
-
-
+    return departamento, municipio_principal, municipio_localidad
