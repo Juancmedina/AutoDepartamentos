@@ -7,11 +7,10 @@ from .config import GRPC_SERVER_URL
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
-def obtener_codigos_divipola_grpc(nombre_departamento: str, nombre_municipio: str) -> dict:
-    
-    dep_norm = normalizar_texto(nombre_departamento)
-    mun_norm = normalizar_texto(nombre_municipio)
-    mun_grpc_format = mun_norm.replace(" ", "_")
+def obtener_codigos_divipola_grpc(nombre_departamento: str, nombre_municipio: str)  -> dict:
+
+    dep_norm = nombre_departamento.strip() if nombre_departamento else ""
+    mun_norm = nombre_municipio.strip() if nombre_municipio else ""
     
     if not dep_norm or not mun_norm:
         return {
@@ -26,12 +25,12 @@ def obtener_codigos_divipola_grpc(nombre_departamento: str, nombre_municipio: st
             stub = region_pb2_grpc.ConsultarRegionAdministrativaServiceStub(channel)
             
             request = region_pb2.GetCodigoRegionRequest(
-                nombreDepartamento=dep_norm,
-                nombreMunicipio=mun_grpc_format
+                 nombreDepartamento=dep_norm,
+                 nombreMunicipio=mun_norm
             )
             
             response = stub.GetCodigoRegion(request, timeout=10) 
-            
+
             return {
                 "estado": "OK",
                 "error_detalle": None,
